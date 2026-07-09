@@ -1,0 +1,15 @@
+ipykernel
+matplotlib
+notebook
+numpy
+pandas
+pydantic
+python-dotenv
+google-genai
+fastapi
+uvicorn
+httpx
+rapidfuzz
+scikit-learn
+sentence-transformers
+pytest

@@ -1,0 +1,68 @@
+{
+  "meeting_id": "meeting-basic-interview",
+  "expected_candidate_participant_id": "p-candidate",
+  "metadata": {
+    "candidate_name": "Nisha Rao",
+    "candidate_email": "nisha.rao@example.com",
+    "calendar_title": "Sherlock technical interview with Nisha Rao",
+    "interview_schedule_start": "2026-07-08T10:00:00Z",
+    "interviewer_names": ["Priya Shah", "Omar Khan"],
+    "interviewer_emails": ["priya@sherlock.sh", "omar@sherlock.sh"]
+  },
+  "events": [
+    {
+      "timestamp_seconds": 0,
+      "event_type": "participant_joined",
+      "participant_id": "p-priya",
+      "display_name": "Priya Shah",
+      "email": "priya@sherlock.sh"
+    },
+    {
+      "timestamp_seconds": 12,
+      "event_type": "participant_joined",
+      "participant_id": "p-candidate",
+      "display_name": "MacBook Pro",
+      "email": "nisha.rao@example.com"
+    },
+    {
+      "timestamp_seconds": 15,
+      "event_type": "camera_on",
+      "participant_id": "p-candidate"
+    },
+    {
+      "timestamp_seconds": 18,
+      "event_type": "video_analyzed",
+      "participant_id": "p-candidate",
+      "payload": {
+        "face_count": 1,
+        "webcam_activity_score": 0.72
+      }
+    },
+    {
+      "timestamp_seconds": 23,
+      "event_type": "participant_joined",
+      "participant_id": "p-omar",
+      "display_name": "Omar Khan",
+      "email": "omar@sherlock.sh"
+    },
+    {
+      "timestamp_seconds": 70,
+      "event_type": "transcript_received",
+      "participant_id": "p-priya",
+      "duration_seconds": 40,
+      "text": "Tell me about your last project and the architecture choices."
+    },
+    {
+      "timestamp_seconds": 130,
+      "event_type": "transcript_received",
+      "participant_id": "p-candidate",
+      "duration_seconds": 65,
+      "text": "I built a fraud detection pipeline and I implemented the candidate risk scoring service."
+    },
+    {
+      "timestamp_seconds": 260,
+      "event_type": "screen_share_started",
+      "participant_id": "p-candidate"
+    }
+  ]
+}

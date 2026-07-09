@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp_seconds": 70,
+    "participant_id": "p-priya",
+    "text": "Tell me about your last project and the architecture choices.",
+    "duration_seconds": 40
+  },
+  {
+    "timestamp_seconds": 130,
+    "participant_id": "p-candidate",
+    "text": "I built a fraud detection pipeline and I implemented the candidate risk scoring service.",
+    "duration_seconds": 65
+  }
+]
