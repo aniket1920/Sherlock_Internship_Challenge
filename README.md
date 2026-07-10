@@ -1,95 +1,346 @@
 # Sherlock Candidate Identifier
+### AI-Powered Real-Time Interview Candidate Identification System
 
-Production-oriented Python project skeleton for the Sherlock Internship Challenge.
+> Submission for the **Sherlock Internship Challenge**
 
-The goal is to continuously identify the interview candidate in an online meeting by combining many weak evidence sources. This is not a single-model project. It is an evidence engine that scores each participant, estimates confidence, and explains every prediction.
+## Overview
 
-## Architecture
+Sherlock is an AI platform that detects fraud during online interviews. Before any fraud detection can happen, Sherlock must first identify **which participant is actually the interview candidate**.
 
-Core flow:
+This project is a production-oriented prototype that automatically identifies the interview candidate in real time by combining multiple independent evidence sources instead of relying on a single rule.
 
-1. Meeting events update `MeetingState`.
-2. Independent signals evaluate each participant.
-3. Each signal returns `score`, `confidence`, and `explanation`.
-4. `ConfidenceEngine` fuses evidence into probabilities.
-5. `ExplanationEngine` summarizes why the current top participant was selected.
+The system continuously evaluates every participant, assigns confidence scores, explains every prediction, and gracefully handles ambiguous situations such as:
 
-See [docs/architecture.md](docs/architecture.md).
+- Candidate joins as **"MacBook Pro"**
+- Candidate joins using a nickname
+- Incorrect participant names
+- Multiple interviewers
+- Silent observers
+- Missing metadata
 
-## Folder Structure
+---
 
-```text
-src/sherlock_candidate_identifier/
-  config/          thresholds and signal weights
-  models/          Pydantic domain models
-  simulator/       JSON meeting replay
-  signals/         name, metadata, transcript, behavior, video, LLM signals
-  reasoning/       pipeline orchestration
-  confidence/      evidence fusion
-  explainability/  human-readable explanations
-  utils/           shared helpers
-tests/             pytest skeletons for every signal and engine
-data/
-  meetings/
-  transcripts/
-  metadata/
-  scenarios/
-notebooks/         notebook-driven verification
-docs/              architecture and evaluation notes
+# Demo Video
+
+🎥 **Project Walkthrough**
+
+https://www.loom.com/share/b1d5664ec700434898065043b94b67f5
+
+The walkthrough includes:
+
+- Problem statement
+- Architecture
+- AI approach
+- Live FastAPI demonstration
+- Trade-offs
+- Future improvements
+
+---
+
+# Features
+
+- Multi-signal evidence fusion
+- Confidence score for every participant
+- Explainable predictions
+- Gemini-powered semantic reasoning
+- FastAPI REST API
+- Interactive Swagger documentation
+- Modular architecture
+- Notebook-driven development
+- Automated unit tests
+
+---
+
+# Architecture
+
+```
+Meeting Input
+      │
+      ▼
+Meeting Replay / API
+      │
+      ▼
+Meeting State
+      │
+      ▼
+Candidate Evidence Engine
+      │
+      ├──────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
+      ▼              ▼             ▼             ▼             ▼
+ Name Signal   Metadata Signal  Transcript   Behavior     Video Signal
+                                          Signal
+                           │
+                           ▼
+                     Gemini LLM Signal
+                           │
+                           ▼
+                    Confidence Engine
+                           │
+                           ▼
+                  Explanation Engine
+                           │
+                           ▼
+                      Final Prediction
 ```
 
-## Setup
+The architecture separates evidence collection from decision making.
+
+Each signal independently evaluates a participant and returns:
+
+- Score
+- Confidence
+- Explanation
+
+The Confidence Engine combines all evidence into a final probability distribution using weighted evidence fusion.
+
+---
+
+# AI Signals
+
+The system evaluates every participant using multiple independent signals.
+
+| Signal | Purpose |
+|---------|---------|
+| Name Signal | Fuzzy matching against expected candidate name |
+| Metadata Signal | Candidate email, calendar information, interviewer names |
+| Transcript Signal | Rule-based conversational cues |
+| Behavior Signal | Speaking duration and interaction patterns |
+| Video Signal | Camera status, face count, webcam activity |
+| Gemini LLM Signal | Semantic reasoning over transcript and participant context |
+
+No single signal determines the final prediction.
+
+Instead, all evidence is fused into one confidence score.
+
+---
+
+# Explainability
+
+Unlike black-box classifiers, every prediction includes human-readable reasoning.
+
+Example:
+
+- Metadata matches scheduled candidate
+- Transcript describes personal implementation work
+- Speaking behavior resembles interview candidate
+- Gemini classified participant as candidate
+
+---
+
+# Tech Stack
+
+### Backend
+
+- Python
+- FastAPI
+- Pydantic
+- uv
+
+### AI
+
+- Google Gemini 2.5 Flash
+- Rule-based Evidence Signals
+- Confidence Fusion Engine
+
+### Testing
+
+- Pytest
+- Jupyter Notebook Validation
+
+---
+
+# Project Structure
+
+```
+src/
+└── sherlock_candidate_identifier/
+    ├── api/
+    ├── confidence/
+    ├── config/
+    ├── explainability/
+    ├── llm/
+    ├── models/
+    ├── reasoning/
+    ├── signals/
+    ├── simulator/
+    └── utils/
+
+tests/
+notebooks/
+data/
+docs/
+```
+
+---
+
+# Installation
+
+Clone the repository
+
+```bash
+git clone <YOUR_GITHUB_REPO>
+cd sherlock-candidate-identifier
+```
+
+Install dependencies
 
 ```bash
 uv sync --extra dev
-Copy `.env.example` to `.env` and set `GEMINI_API_KEY` to enable the Gemini signal.
 ```
 
-## Run Tests
+Create environment file
 
-```bash
-uv run pytest
+```
+.env
 ```
 
-Start the API:
+Add your Gemini API key
+
+```
+GEMINI_API_KEY=YOUR_API_KEY
+```
+
+---
+
+# Running the Project
+
+Start FastAPI
 
 ```bash
 uv run uvicorn sherlock_candidate_identifier.api.main:app --reload
 ```
 
-Swagger is available at `http://127.0.0.1:8000/docs`. The `/predict` endpoint accepts
-the same meeting JSON format as `MeetingReplay`. If Gemini is unavailable or no key
-is configured, the LLM signal contributes zero score and confidence while the rest
-of the pipeline continues normally.
+Open Swagger
 
-## Run Demo
-
-```bash
-uv run sherlock-demo
+```
+http://127.0.0.1:8000/docs
 ```
 
-## Notebook Workflow
+Endpoints
 
-Reusable logic lives in `src/`. Notebooks only import and verify modules.
+### GET
 
-- `01_meeting_simulator.ipynb`
-- `02_name_signal.ipynb`
-- `03_metadata_signal.ipynb`
-- `04_transcript_signal.ipynb`
-- `05_behavior_signal.ipynb`
-- `06_video_signal.ipynb`
-- `07_llm_reasoning.ipynb`
-- `08_confidence_engine.ipynb`
-- `09_full_pipeline.ipynb`
+```
+/health
+```
 
-## How To Extend
+Returns
 
-- Add a new signal by implementing `evaluate(participant, state) -> SignalResult`.
-- Add its weight in `config/signal_weights.py`.
-- Add a notebook to inspect its behavior.
-- Add a pytest file for deterministic checks.
-- Add scenario JSON files under `data/scenarios/`.
+```json
+{
+    "status":"ok"
+}
+```
 
-FastAPI is a thin interface over the unchanged replay and evidence pipeline. Gemini
-is isolated behind `llm/` and contributes only through the existing `LLMSignal`
-contract.
+### POST
+
+```
+/predict
+```
+
+Accepts a meeting JSON payload and returns:
+
+- Identified candidate
+- Confidence score
+- Ranked participant probabilities
+- Evidence from every signal
+- Final explanation
+
+---
+
+# Running Tests
+
+Run all automated tests
+
+```bash
+uv run pytest
+```
+
+Current Status
+
+```
+12 tests passed
+```
+
+---
+
+# Notebook Workflow
+
+Each notebook validates one module independently.
+
+| Notebook | Purpose |
+|-----------|----------|
+| 01 | Meeting Replay |
+| 02 | Name Signal |
+| 03 | Metadata Signal |
+| 04 | Transcript Signal |
+| 05 | Behavior Signal |
+| 06 | Video Signal |
+| 07 | Gemini LLM Integration |
+| 08 | Confidence Engine |
+| 09 | Full Pipeline |
+
+---
+
+# Testing & Evaluation
+
+The project was evaluated using:
+
+- Unit tests
+- Notebook verification
+- FastAPI API testing
+- Swagger integration
+- End-to-end replay scenarios
+
+Example scenarios include:
+
+- Candidate joins as **MacBook Pro**
+- Multiple interviewers
+- Missing metadata
+- Transcript-based identification
+- Candidate explanation generation
+
+---
+
+# Trade-offs
+
+The current prototype assumes structured meeting information (participant metadata, transcripts, webcam state, etc.) is already available, as specified in the challenge statement.
+
+Instead of building a meeting platform integration, the project focuses entirely on the candidate identification problem.
+
+Gemini is used as **one evidence source** rather than making the final decision directly, allowing deterministic confidence fusion and explainability.
+
+---
+
+# Future Improvements
+
+- Direct Google Meet / Zoom integration
+- Real-time event streaming
+- Better conversational behavior modeling
+- Historical learning from previous interviews
+- Confidence smoothing across long meetings
+- Additional real-world evaluation scenarios
+
+---
+
+# Why This Approach?
+
+Rather than relying on a single heuristic, this system combines multiple weak evidence sources to produce a robust and explainable prediction.
+
+This closely aligns with Sherlock's stated evaluation criteria:
+
+- Multi-signal reasoning
+- Confidence estimation
+- Explainability
+- Real-time updates
+- Graceful handling of ambiguity
+
+---
+
+# Author
+
+**Aniket Singh**
+
+GitHub: https://github.com/<YOUR_USERNAME>
+
+Submission for the Sherlock Internship Challenge.
