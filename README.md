@@ -178,7 +178,7 @@ docs/
 Clone the repository
 
 ```bash
-git clone <YOUR_GITHUB_REPO>
+git clone github.com/aniket1920/Sherlock_Internship_Challenge
 cd sherlock-candidate-identifier
 ```
 
@@ -341,6 +341,6 @@ This closely aligns with Sherlock's stated evaluation criteria:
 
 **Aniket Singh**
 
-GitHub: https://github.com/<YOUR_USERNAME>
+GitHub: https://github.com/aniket1920/
 
 Submission for the Sherlock Internship Challenge.
