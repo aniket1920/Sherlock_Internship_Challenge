@@ -53,47 +53,18 @@ The walkthrough includes:
 
 # Architecture
 
-```
-Meeting Input
-      │
-      ▼
-Meeting Replay / API
-      │
-      ▼
-Meeting State
-      │
-      ▼
-Candidate Evidence Engine
-      │
-      ├──────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
-      ▼              ▼             ▼             ▼             ▼
- Name Signal   Metadata Signal  Transcript   Behavior     Video Signal
-                                          Signal
-                           │
-                           ▼
-                     Gemini LLM Signal
-                           │
-                           ▼
-                    Confidence Engine
-                           │
-                           ▼
-                  Explanation Engine
-                           │
-                           ▼
-                      Final Prediction
-```
+This project follows a modular evidence-fusion architecture where multiple independent AI signals evaluate each participant before a confidence engine produces the final prediction.
 
-The architecture separates evidence collection from decision making.
+📄 **Detailed Architecture:** [docs/architecture.md](docs/architecture.md)
 
-Each signal independently evaluates a participant and returns:
+The documentation includes:
 
-- Score
-- Confidence
-- Explanation
-
-The Confidence Engine combines all evidence into a final probability distribution using weighted evidence fusion.
-
----
+- Complete system architecture
+- Evidence flow
+- Signal pipeline
+- Confidence fusion
+- Explainability engine
+- Design decisions
 
 # AI Signals
 
